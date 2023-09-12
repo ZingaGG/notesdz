@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-class INoteService:
+class INoteService(ABC):
+
     @abstractmethod
     def createNote(self):
         pass
