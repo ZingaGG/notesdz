@@ -3,7 +3,7 @@ import datetime
 class Note:
     id = 1
 
-    def __init__(self, title, text):
+    def __init__(self, title: str, text: str):
         self.id = Note.id
         self.title = title
         self.text = text
