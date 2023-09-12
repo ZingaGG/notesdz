@@ -13,6 +13,11 @@ class FileService(IFileService):
             except json.decoder.JSONDecodeError:
                 data = []
                 return data
+            
+    def printJSON(self):
+        data = self.readJSON()
+        for el in data:
+            print(el)
 
     def addNote(self, note: Note):
         note_dict = {"id": note.id, "title": note.title, "text": note.text, "date": note.date}
