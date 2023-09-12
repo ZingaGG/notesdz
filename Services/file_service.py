@@ -3,15 +3,22 @@ from note import Note
 import json
 
 class FileService(IFileService):
-    def addNote(self, note: Note):
-        note_dict = {"id": note.id, "title": note.title, "text": note.text, "date": note.date}
-        with open("notes.json", "a+") as file:
+    fileName = "notes.json"
+
+    def readJSON(self):
+        with open(self.fileName, "r") as file:
             try:
                 data = json.load(file)
+                return data
             except json.decoder.JSONDecodeError:
                 data = []
+                return data
 
-            data.append(note_dict)
+    def addNote(self, note: Note):
+        note_dict = {"id": note.id, "title": note.title, "text": note.text, "date": note.date}
 
+        data = self.readJSON()
+        data.append(note_dict)
+
+        with open(self.fileName, "w") as file:
             json.dump(data, file, default=str, indent=2)
-            file.write("\n")
