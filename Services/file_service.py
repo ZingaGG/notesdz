@@ -29,6 +29,16 @@ class FileService(IFileService):
     def __private_writeJSON(self, data: list):
         with open(self.fileName, "w") as file:
             json.dump(data, file, default=str, indent=2)
+
+    def __private_takeID(self):
+        while True:
+            try:
+                print("Input note id you want to change")
+                id = int(input())
+                return id
+            except ValueError as e:
+                print(e)
+                print("Enter valid id!")
             
     def printJSON(self):
         data = self.__private_readJSON()
@@ -46,16 +56,7 @@ class FileService(IFileService):
 
     def editNote(self):
         data = self.__private_readJSON()
-
-        while True:
-            try:
-                print("Input note id you want to change")
-                id = int(input())
-                break
-            except ValueError as e:
-                print(e)
-                print("Enter valid id!")
-
+        id = self.__private_takeID()
         noteToEdit = self.__private_findByIdInJSON(id)
 
         while True:
@@ -83,3 +84,12 @@ class FileService(IFileService):
                 print(e)
                 print("Restarting edition...")
 
+    def removeFromJSON(self):
+        data = self.__private_readJSON()
+        id = self.__private_takeID
+        data.pop(id - 1)
+        self.__private_writeJSON(data)
+
+        # Реализовать обновление индексов
+
+        print("Note deleted!")
