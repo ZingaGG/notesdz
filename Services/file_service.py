@@ -5,32 +5,36 @@ import json
 class FileService(IFileService):
     fileName = "notes.json"
 
-    def __private_readJSON(self):
-        with open(self.fileName, "r") as file:
-            try:
-                data = json.load(file)
-                return data
-            except json.decoder.JSONDecodeError:
-                data = []
-                return data
+    def _readJSON(self):
+        try:
+            with open(self.fileName, "r") as file:
+                try:
+                    data = json.load(file)
+                    return data
+                except json.decoder.JSONDecodeError:
+                    data = []
+                    return data
+        except FileNotFoundError as e:
+            print(f"Файл {self.fileName} не существует. Создаем новый файл.")
+            with open(self.fileName, "w") as file:
+                json.dump([], file)  # Создаем пустой JSON файл
+            return []
             
-    def __private_findByIdInJSON(self, id: int):
-        data = self.__private_readJSON()
+    def _findByIdInJSON(self, id: int):
+        data = self._readJSON()
         try:
             for el in data:
                 if el.get("id") == id:
                     return el
-                else:
-                    raise IndexError("No note with such index")
+            raise IndexError("No note with such index")
         except IndexError as e:
             print(e)
 
-
-    def __private_writeJSON(self, data: list):
+    def _writeJSON(self, data: list):
         with open(self.fileName, "w") as file:
             json.dump(data, file, default=str, indent=2)
 
-    def __private_takeID(self):
+    def _takeID(self):
         while True:
             try:
                 print("Input note id you want to change")
@@ -41,30 +45,32 @@ class FileService(IFileService):
                 print("Enter valid id!")
             
     def printJSON(self):
-        data = self.__private_readJSON()
+        data = self._readJSON()
         for el in data:
+            print()
             print(el)
+            print()
 
     def addNote(self, note: Note):
         note_dict = {"id": note.id, "title": note.title, "text": note.text, "date": note.date}
 
-        data = self.__private_readJSON()
+        data = self._readJSON()
         data.append(note_dict)
 
         with open(self.fileName, "w") as file:
             json.dump(data, file, default=str, indent=2)
 
     def editNote(self):
-        data = self.__private_readJSON()
-        id = self.__private_takeID()
-        noteToEdit = self.__private_findByIdInJSON(id)
+        data = self._readJSON()
+        id = self._takeID()
+        noteToEdit = self._findByIdInJSON(id)
 
         while True:
-            print("Input attribute you want to change(title, text)")
+            print("Input attribute you want to change (title, text)")
             attribute = input().lower()
             
             try:
-                if(attribute != "title" and attribute != "text"):
+                if attribute != "title" and attribute != "text":
                     raise AttributeError("Wrong attribute!")
                 print("Input new info")
                 newData = input()
@@ -72,11 +78,10 @@ class FileService(IFileService):
                 print("Updated note: ")
                 print(noteToEdit)
 
-                # Запись обнволенного листа заметок
+                # Запись обновленного списка заметок
                 data.pop(id - 1)
-                data.insert(id-1, noteToEdit)
-                self.__private_writeJSON(data)
-
+                data.insert(id - 1, noteToEdit)
+                self._writeJSON(data)
 
                 print()
                 print("Success edit!")
@@ -87,13 +92,13 @@ class FileService(IFileService):
                 print("Restarting edition...")
 
     def removeFromJSON(self):
-        data = self.__private_readJSON()
-        id = self.__private_takeID
+        data = self._readJSON()
+        id = self._takeID()
         data.pop(id - 1)
 
         for i in range(len(data)):
-            data[i] = data[i].update({"id": i+1})
+            data[i]["id"] = i + 1
 
-        self.__private_writeJSON(data)
+        self._writeJSON(data)
 
         print("Note deleted!")

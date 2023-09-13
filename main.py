@@ -1,15 +1,16 @@
 from note import Note
 from services.note_service import NoteService 
-from services.i_file_service import IFileService
 from services.file_service import FileService
+import os
 
 def main():
+    file_name = "notes.json"
     noteService = NoteService()
     fileService = FileService() 
 
     while True:
         print("Hello! Input operation (add, read, edit, delete, stop)")
-        operation = input().lower
+        operation = input().lower()
 
         match operation:
             # Добавить заметку
@@ -35,6 +36,11 @@ def main():
                 fileService.removeFromJSON()
 
             case "stop":
+                if os.path.exists(file_name):
+                    os.remove(file_name)
+                    print(f"Файл {file_name} удален.")
+                else:
+                    print(f"Файл {file_name} не существует.")
                 print("Exitinig...")
                 break
 
