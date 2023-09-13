@@ -45,3 +45,5 @@ def main():
                 break
 
 main()
+
+# Сделать тесты
