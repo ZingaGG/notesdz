@@ -76,6 +76,8 @@ class FileService(IFileService):
                 data.pop(id - 1)
                 data.insert(id-1, noteToEdit)
                 self.__private_writeJSON(data)
+
+                
                 print()
                 print("Success edit!")
                 print()
