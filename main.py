@@ -5,7 +5,7 @@ from services.file_service import FileService
 
 def main():
     noteService = NoteService()
-    fileService = FileService(IFileService) #РАЗОБРАТЬСЯ НАХУЙ ТУТ ЭТО НАДО
+    fileService = FileService() 
 
     while True:
         print("Hello! Input operation (add, read, edit, delete, stop)")
@@ -30,7 +30,7 @@ def main():
             case "edit":
                 fileService.editNote()
             
-            # Удалить по id ДОДЕЛАТЬ!!!
+            # Удалить по id 
             case "delete":
                 fileService.removeFromJSON()
 

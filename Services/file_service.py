@@ -77,7 +77,7 @@ class FileService(IFileService):
                 data.insert(id-1, noteToEdit)
                 self.__private_writeJSON(data)
 
-                
+
                 print()
                 print("Success edit!")
                 print()
@@ -90,8 +90,10 @@ class FileService(IFileService):
         data = self.__private_readJSON()
         id = self.__private_takeID
         data.pop(id - 1)
-        self.__private_writeJSON(data)
 
-        # Реализовать обновление индексов
+        for i in range(len(data)):
+            data[i] = data[i].update({"id": i+1})
+
+        self.__private_writeJSON(data)
 
         print("Note deleted!")
