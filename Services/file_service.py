@@ -5,7 +5,7 @@ import json
 class FileService(IFileService):
     fileName = "notes.json"
 
-    def _readJSON(self):
+    def readJSON(self):
         try:
             with open(self.fileName, "r") as file:
                 try:
@@ -21,31 +21,34 @@ class FileService(IFileService):
             return []
             
     def _findByIdInJSON(self, id: int):
-        data = self._readJSON()
-        try:
-            for el in data:
-                if el.get("id") == id:
-                    return el
-            raise IndexError("No note with such index")
-        except IndexError as e:
-            print(e)
+        data = self.readJSON()
+        for el in data:
+            if el.get("id") == id:
+                return el
 
     def _writeJSON(self, data: list):
         with open(self.fileName, "w") as file:
             json.dump(data, file, default=str, indent=2)
 
     def _takeID(self):
+        data = self.readJSON()
         while True:
             try:
-                print("Input note id you want to change")
+                print("Input note id: ")
                 id = int(input())
+                if(id <= 0 or id > len(data)):
+                    raise IndexError("No note with such index")
                 return id
             except ValueError as e:
                 print(e)
                 print("Enter valid id!")
+            except IndexError as e:
+                print(e)
+                print("Enter valid id!")
+                self._takeID
             
     def printJSON(self):
-        data = self._readJSON()
+        data = self.readJSON()
         for el in data:
             print()
             print(el)
@@ -54,14 +57,14 @@ class FileService(IFileService):
     def addNote(self, note: Note):
         note_dict = {"id": note.id, "title": note.title, "text": note.text, "date": note.date}
 
-        data = self._readJSON()
+        data = self.readJSON()
         data.append(note_dict)
 
         with open(self.fileName, "w") as file:
             json.dump(data, file, default=str, indent=2)
 
     def editNote(self):
-        data = self._readJSON()
+        data = self.readJSON()
         id = self._takeID()
         noteToEdit = self._findByIdInJSON(id)
 
@@ -92,7 +95,7 @@ class FileService(IFileService):
                 print("Restarting edition...")
 
     def removeFromJSON(self):
-        data = self._readJSON()
+        data = self.readJSON()
         id = self._takeID()
         data.pop(id - 1)
 

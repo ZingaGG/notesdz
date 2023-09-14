@@ -1,7 +1,6 @@
 from note import Note
 from services.note_service import NoteService 
 from services.file_service import FileService
-import os
 
 def main():
     file_name = "notes.json"
@@ -36,11 +35,6 @@ def main():
                 fileService.removeFromJSON()
 
             case "stop":
-                if os.path.exists(file_name):
-                    os.remove(file_name)
-                    print(f"Файл {file_name} удален.")
-                else:
-                    print(f"Файл {file_name} не существует.")
                 print("Exitinig...")
                 break
 

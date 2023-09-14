@@ -1,14 +1,12 @@
 import datetime
 
 class Note:
-    id = 1
 
-    def __init__(self, title: str, text: str):
-        self.id = Note.id
+    def __init__(self,id :int, title: str, text: str):
+        self.id = id
         self.title = title
         self.text = text
         self.date = datetime.datetime.now() 
-        Note.id += 1
     
     def toString(self):
         print("Id = ", self.id)
